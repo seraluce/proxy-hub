@@ -134,6 +134,7 @@ const INDEX_HTML = `<!DOCTYPE html>
                 margin-top: 8px;
                 border-radius: var(--radius);
                 border: 1px solid var(--border);
+                padding: 16px; /* 和container padding保持一致 */
                 z-index: 1000;
             }
             .nav-links.mobile-open li {
@@ -730,11 +731,21 @@ const INDEX_HTML = `<!DOCTYPE html>
 
     // ===== Toast =====
     function toast(msg, type = 'info') {
-        const el = document.createElement('div');
-        el.className = 'toast toast-' + type;
-        el.textContent = msg;
-        toastContainer.appendChild(el);
-        setTimeout(() => el.remove(), 3000);
+        if (type === 'error') {
+            // 对于错误消息，创建居中的弹窗
+            const el = document.createElement('div');
+            el.className = 'toast toast-error';
+            el.textContent = msg;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
+        } else {
+            // 对于其他类型的消息，使用容器
+            const el = document.createElement('div');
+            el.className = 'toast toast-' + type;
+            el.textContent = msg;
+            toastContainer.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
+        }
     }
 
     // ===== 复制 =====
