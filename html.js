@@ -732,7 +732,21 @@ const INDEX_HTML = `<!DOCTYPE html>
         <p>释放以粘贴链接</p>
     </div>
 </div>
-
+<script src="https://giscus.app/client.js"
+        data-repo="seraluce/gh-proxy"
+        data-repo-id="R_kgDOTV_VtQ"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOTV_Vtc4DBCSb"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        async>
+</script>
 <!-- Toast 容器 -->
 <div class="toast-container" id="toastContainer"></div>
 
@@ -1019,21 +1033,7 @@ const INDEX_HTML = `<!DOCTYPE html>
     setInterval(checkHealth, 30000);
 })();
 </script>
-<script src="https://giscus.app/client.js"
-        data-repo="seraluce/gh-proxy"
-        data-repo-id="R_kgDOTV_VtQ"
-        data-category="Announcements"
-        data-category-id="DIC_kwDOTV_Vtc4DBCSb"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="bottom"
-        data-theme="preferred_color_scheme"
-        data-lang="zh-CN"
-        crossorigin="anonymous"
-        async>
-</script>
+
 </body>
 </html>`;
 
