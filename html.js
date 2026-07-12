@@ -3,7 +3,7 @@ const INDEX_HTML = `<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub 资源加速 · GH Proxy</title>
+    <title>GitHub 资源加速 - GH Proxy</title>
     <meta name="description" content="GitHub Release、Archive 及项目文件的加速下载服务，基于 Cloudflare Workers">
     <meta name="theme-color" content="#0070f3">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230070f3' stroke-width='2'><polyline points='16 18 22 12 16 6'/><polyline points='8 6 2 12 8 18'/></svg>">
@@ -368,15 +368,12 @@ const INDEX_HTML = `<!DOCTYPE html>
         }
         .health-dot {
             width: 8px; height: 8px; border-radius: 50%;
-            background: var(--fg-tertiary);
+            background: #9ca3af;
             transition: background var(--transition);
         }
-        .health-dot.online { background: #10b981; }
-        .health-dot.offline { background: var(--error); }
-        .health-dot.checking {
-            background: var(--warning);
-            animation: pulse 1s ease-in-out infinite;
-        }
+        .health-dot.online { background: #22c55e; }
+        .health-dot.offline { background: #ef4444; }
+        .health-dot.checking { background: #f59e0b; animation: pulse 1s ease-in-out infinite; }
         .health-text {
             color: var(--fg); font-weight: 500;
         }
@@ -525,7 +522,9 @@ const INDEX_HTML = `<!DOCTYPE html>
 
         <div class="tips-section">
             <div class="tip-item">
-                <span class="tip-icon">🚀</span>
+                <span class="tip-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </span>
                 <div class="tip-content">
                     <strong>aria2 多线程下载 (推荐)</strong>
                     <code>aria2c -x 16 -s 16 -k 1M -o 文件名 "加速链接"</code>
@@ -533,7 +532,9 @@ const INDEX_HTML = `<!DOCTYPE html>
                 </div>
             </div>
             <div class="tip-item">
-                <span class="tip-icon">📦</span>
+                <span class="tip-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                </span>
                 <div class="tip-content">
                     <strong>断点续传</strong>
                     <code>wget -c "加速链接" 或 aria2c -c "加速链接"</code>
@@ -541,7 +542,9 @@ const INDEX_HTML = `<!DOCTYPE html>
                 </div>
             </div>
             <div class="tip-item">
-                <span class="tip-icon">🔗</span>
+                <span class="tip-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                </span>
                 <div class="tip-content">
                     <strong>URL 直接加速</strong>
                     在任意 GitHub 链接前加上当前域名即可
@@ -561,7 +564,7 @@ const INDEX_HTML = `<!DOCTYPE html>
 
 <!-- 页脚 -->
 <footer class="footer">
-    <div>基于 Cloudflare Workers 构建 · 免费、开源、无服务器</div>
+    <div>基于 Cloudflare Workers 构建 - 免费、开源、无服务器</div>
     <div class="footer-links">
         <a href="https://github.com/hunshcn/gh-proxy" target="_blank" rel="noopener">GitHub</a>
         <a href="https://workers.cloudflare.com" target="_blank" rel="noopener">Cloudflare Workers</a>
