@@ -3,7 +3,7 @@ main = "index.js"
 compatibility_date = "2024-01-01"
 
 kv_namespaces = [
-    { binding = "GH_CACHE", id = "你的KV_ID", preview_id = "你的KV_PREVIEW_ID" }
+    { binding = "GH_CACHE", id = "b944ad81eb904723b5eb29cccdf0f15b"}
 ]
 
 [env.production]
