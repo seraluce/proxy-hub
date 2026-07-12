@@ -159,6 +159,7 @@ const TEMPLATE_HTML = `<!DOCTYPE html>
                 backdrop-filter: blur(12px) saturate(180%);
                 -webkit-backdrop-filter: blur(12px) saturate(180%);
                 box-shadow: var(--shadow-lg);
+                margin-left: 0;
             }
             .nav-links.mobile-open li {
                 width: 100%;
