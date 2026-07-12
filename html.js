@@ -94,7 +94,7 @@ const INDEX_HTML = `<!DOCTYPE html>
         @media (min-width: 1280px) {
             .navbar { padding: 0 48px; }
         }
-        .nav-brand {
+        .nav-brand { flex:1;
             display: flex; align-items: center; gap: 10px;
             font-weight: 700; font-size: 16px; letter-spacing: -0.02em;
             color: var(--fg); text-decoration: none;
@@ -210,6 +210,10 @@ const INDEX_HTML = `<!DOCTYPE html>
         .input-wrapper input:focus {
             border-color: var(--accent);
             box-shadow: 0 0 0 3px var(--accent-light);
+        }
+        .input-wrapper input.error {
+            border-color: var(--error);
+            box-shadow: 0 0 0 3px rgba(239,68,68,0.15);
         }
         .input-wrapper input::placeholder { color: var(--fg-tertiary); }
         .input-icon {
@@ -766,17 +770,23 @@ const INDEX_HTML = `<!DOCTYPE html>
         return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
+    function showInputError() {
+        input.focus();
+        input.classList.add('error');
+        setTimeout(() => input.classList.remove('error'), 1500);
+    }
+
     function handleGo() {
         const raw = input.value.trim();
-        if (!raw) { toast('请输入 GitHub 链接', 'error'); input.focus(); return; }
-        if (!isValidGitHubUrl(raw)) { toast('请输入有效的 GitHub 链接', 'error'); return; }
+        if (!raw) { toast('请输入 GitHub 链接', 'error'); showInputError(); return; }
+        if (!isValidGitHubUrl(raw)) { toast('请输入有效的 GitHub 链接', 'error'); showInputError(); return; }
         const url = buildProxyUrl(raw);
         if (url) window.open(url, '_blank');
     }
 
     function handleWget() {
         const raw = input.value.trim();
-        if (!raw || !isValidGitHubUrl(raw)) { toast('请先输入 GitHub 链接', 'error'); return; }
+        if (!raw || !isValidGitHubUrl(raw)) { toast('请先输入 GitHub 链接', 'error'); showInputError(); return; }
         const url = buildProxyUrl(raw);
         const fn = extractFilename(raw);
         copyText('wget -O ' + fn + ' "' + url + '"');
@@ -784,7 +794,7 @@ const INDEX_HTML = `<!DOCTYPE html>
 
     function handleCurl() {
         const raw = input.value.trim();
-        if (!raw || !isValidGitHubUrl(raw)) { toast('请先输入 GitHub 链接', 'error'); return; }
+        if (!raw || !isValidGitHubUrl(raw)) { toast('请先输入 GitHub 链接', 'error'); showInputError(); return; }
         const url = buildProxyUrl(raw);
         const fn = extractFilename(raw);
         copyText('curl -L -o ' + fn + ' "' + url + '"');
@@ -792,7 +802,7 @@ const INDEX_HTML = `<!DOCTYPE html>
 
     function handleDownload() {
         const raw = input.value.trim();
-        if (!raw || !isValidGitHubUrl(raw)) { toast('请先输入 GitHub 链接', 'error'); return; }
+        if (!raw || !isValidGitHubUrl(raw)) { toast('请先输入 GitHub 链接', 'error'); showInputError(); return; }
         const url = buildProxyUrl(raw);
         window.open(url, '_blank');
     }
