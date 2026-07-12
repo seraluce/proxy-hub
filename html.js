@@ -381,6 +381,14 @@ const INDEX_HTML = `<!DOCTYPE html>
             margin-left: auto; font-size: 12px;
             color: var(--fg-tertiary); font-family: var(--font-mono);
         }
+        .health-status-link {
+            margin-left: auto; font-size: 12px;
+            color: var(--fg-tertiary); text-decoration: none;
+        }
+        .health-status-link:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
 
         /* ===== 响应式 ===== */
         @media (max-width: 1280px) {
@@ -553,11 +561,18 @@ const INDEX_HTML = `<!DOCTYPE html>
             </div>
         </div>
 
-        <div class="divider">GitHub 连通性</div>
+<div class="divider">GitHub 连通性</div>
         <div class="health-section" id="healthSection">
-            <span class="health-dot checking" id="healthDot"></span>
+            <span class="health-dot checking" id="healthDot" title="GitHub 连接状态：绿色=正常，黄色=检测中，红色=异常"></span>
             <span class="health-text" id="healthText">检测中...</span>
             <span class="health-latency" id="healthLatency"></span>
+            <a href="https://www.githubstatus.com/" target="_blank" rel="noopener" class="health-status-link" title="查看 GitHub 官方状态页面">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 6px; opacity: 0.7;">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+            </a>
         </div>
     </div>
 </main>
