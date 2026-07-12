@@ -80,13 +80,16 @@ const INDEX_HTML = `<!DOCTYPE html>
         /* ===== 导航栏 ===== */
         .navbar {
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 24px; height: 56px;
+            padding: 0 32px; height: 56px;
             border-bottom: 1px solid var(--border);
             background: color-mix(in srgb, var(--bg) 80%, transparent);
             backdrop-filter: blur(12px) saturate(180%);
             -webkit-backdrop-filter: blur(12px) saturate(180%);
             position: sticky; top: 0; z-index: 100;
             transition: background var(--transition), border-color var(--transition);
+        }
+        @media (min-width: 1280px) {
+            .navbar { padding: 0 48px; }
         }
         .nav-brand {
             display: flex; align-items: center; gap: 10px;
@@ -115,7 +118,7 @@ const INDEX_HTML = `<!DOCTYPE html>
 
         /* ===== 主容器 ===== */
         .container {
-            max-width: 680px; margin: 0 auto; padding: 48px 24px 64px;
+            max-width: 1200px; margin: 0 auto; padding: 48px 32px 64px;
             flex: 1; width: 100%;
         }
         .hero { text-align: center; margin-bottom: 40px; }
@@ -144,6 +147,7 @@ const INDEX_HTML = `<!DOCTYPE html>
             border-radius: var(--radius-lg); padding: 28px;
             box-shadow: var(--shadow);
             transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+            max-width: 800px; margin: 0 auto;
         }
         .card:focus-within { box-shadow: var(--shadow-lg); border-color: var(--border-hover); }
 
@@ -180,23 +184,33 @@ const INDEX_HTML = `<!DOCTYPE html>
         .input-wrapper input:not(:placeholder-shown) ~ .clear-icon { display: flex; }
 
         .btn {
-            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-            padding: 0 16px; height: 36px;
-            font-family: var(--font-sans); font-size: 12px; font-weight: 500;
-            border: 1px solid var(--border); border-radius: 6px;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 0 20px; height: 42px;
+            font-family: var(--font-sans); font-size: 13px; font-weight: 600;
+            border: 1px solid var(--border); border-radius: 8px;
             background: var(--bg-tertiary); color: var(--fg);
             cursor: pointer; transition: all var(--transition);
             text-decoration: none; white-space: nowrap; user-select: none;
         }
-        .btn:hover { background: var(--border); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
-        .btn:active { transform: translateY(0); }
-        .btn svg { width: 14px; height: 14px; flex-shrink: 0; }
-        .btn-primary {
-            background: var(--accent); color: var(--accent-foreground); border-color: var(--accent);
-            font-weight: 600;
+        .btn:hover { 
+            background: var(--border); 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-color: var(--border-hover);
         }
-        .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
-        .btn-primary:active { opacity: 0.9; }
+        .btn:active { transform: translateY(0); }
+        .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+            color: var(--accent-foreground); border-color: transparent;
+            font-weight: 600; box-shadow: 0 2px 8px rgba(0, 112, 243, 0.3);
+        }
+        .btn-primary:hover { 
+            background: linear-gradient(135deg, var(--accent-hover) 0%, var(--accent) 100%);
+            box-shadow: 0 4px 16px rgba(0, 112, 243, 0.4);
+            transform: translateY(-2px);
+        }
+        .btn-primary:active { transform: translateY(0); opacity: 0.95; }
 
         /* ===== 下载操作组 ===== */
         .actions {
@@ -308,7 +322,74 @@ const INDEX_HTML = `<!DOCTYPE html>
         .drag-overlay-inner svg { width: 40px; height: 40px; color: var(--accent); margin-bottom: 12px; }
         .drag-overlay-inner p { color: var(--fg); font-size: 16px; font-weight: 600; }
 
+        /* ===== 提示区块 ===== */
+        .tips-section {
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .tip-item {
+            display: flex; gap: 12px; padding: 12px;
+            background: var(--bg); border-radius: var(--radius);
+            border: 1px solid var(--border);
+            transition: all var(--transition);
+        }
+        .tip-item:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-sm);
+        }
+        .tip-icon {
+            font-size: 18px; flex-shrink: 0;
+        }
+        .tip-content {
+            flex: 1; min-width: 0;
+        }
+        .tip-content strong {
+            display: block; font-size: 13px; color: var(--fg);
+            margin-bottom: 4px;
+        }
+        .tip-content code {
+            display: block; font-family: var(--font-mono);
+            font-size: 11px; color: var(--accent);
+            background: var(--bg-code); padding: 6px 8px;
+            border-radius: 4px; margin: 6px 0;
+            word-break: break-all;
+        }
+        .tip-desc {
+            font-size: 12px; color: var(--fg-secondary);
+            line-height: 1.4;
+        }
+
+        /* ===== 健康检查 ===== */
+        .health-section {
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px 16px; background: var(--bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            font-size: 13px;
+        }
+        .health-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--fg-tertiary);
+            transition: background var(--transition);
+        }
+        .health-dot.online { background: #10b981; }
+        .health-dot.offline { background: var(--error); }
+        .health-dot.checking {
+            background: var(--warning);
+            animation: pulse 1s ease-in-out infinite;
+        }
+        .health-text {
+            color: var(--fg); font-weight: 500;
+        }
+        .health-latency {
+            margin-left: auto; font-size: 12px;
+            color: var(--fg-tertiary); font-family: var(--font-mono);
+        }
+
         /* ===== 响应式 ===== */
+        @media (max-width: 1280px) {
+            .container { max-width: 960px; padding: 48px 24px 64px; }
+            .navbar { padding: 0 24px; }
+        }
         @media (max-width: 640px) {
             .navbar { padding: 0 16px; }
             .nav-links { display: none; }
@@ -471,7 +552,7 @@ const INDEX_HTML = `<!DOCTYPE html>
 
         <div class="divider">GitHub 连通性</div>
         <div class="health-section" id="healthSection">
-            <span class="health-dot" id="healthDot"></span>
+            <span class="health-dot checking" id="healthDot"></span>
             <span class="health-text" id="healthText">检测中...</span>
             <span class="health-latency" id="healthLatency"></span>
         </div>
@@ -715,6 +796,55 @@ const INDEX_HTML = `<!DOCTYPE html>
         input.value = params.get('q');
         updateHints();
     }
+
+    // ===== 健康检查 =====
+    async function checkHealth() {
+        const healthDot = $('#healthDot');
+        const healthText = $('#healthText');
+        const healthLatency = $('#healthLatency');
+        
+        if (!healthDot || !healthText || !healthLatency) return;
+        
+        try {
+            healthDot.className = 'health-dot checking';
+            healthText.textContent = '检测中...';
+            healthLatency.textContent = '';
+            
+            const start = Date.now();
+            const resp = await fetch('/health', {
+                method: 'GET',
+                cache: 'no-store'
+            });
+            const latency = Date.now() - start;
+            
+            if (resp.ok) {
+                const data = await resp.json();
+                if (data.github === 'reachable') {
+                    healthDot.className = 'health-dot online';
+                    healthText.textContent = 'GitHub 连接正常';
+                    healthLatency.textContent = data.latency_ms + 'ms';
+                } else {
+                    healthDot.className = 'health-dot offline';
+                    healthText.textContent = 'GitHub 连接异常';
+                    healthLatency.textContent = '错误';
+                }
+            } else {
+                healthDot.className = 'health-dot offline';
+                healthText.textContent = '检测失败';
+                healthLatency.textContent = resp.status;
+            }
+        } catch (err) {
+            healthDot.className = 'health-dot offline';
+            healthText.textContent = '检测失败';
+            healthLatency.textContent = '网络错误';
+        }
+    }
+    
+    // 页面加载时检测健康状态
+    setTimeout(checkHealth, 1000);
+    
+    // 每30秒重新检测
+    setInterval(checkHealth, 30000);
 })();
 </script>
 </body>
