@@ -135,10 +135,10 @@ const INDEX_HTML = `<!DOCTYPE html>
                 top: 100%;
                 right: 0;
                 left: 0;
-                margin: 8px 12px 0;
+                margin: 4px 6px 0;
                 border-radius: var(--radius);
                 border: 1px solid var(--border);
-                padding: 12px 8px;
+                padding: 6px 4px;
                 z-index: 1000;
                 backdrop-filter: blur(12px) saturate(180%);
                 -webkit-backdrop-filter: blur(12px) saturate(180%);
@@ -146,27 +146,42 @@ const INDEX_HTML = `<!DOCTYPE html>
             }
             .nav-links.mobile-open li {
                 width: 100%;
-                margin: 2px 0;
+                margin: 1px 0;
             }
             .nav-links.mobile-open li a {
                 justify-content: center;
-                padding: 14px 16px;
+                padding: 10px 12px;
                 width: 100%;
-                border-bottom: 1px solid rgba(0,0,0,0.05);
                 display: flex;
                 align-items: center;
                 gap: 10px;
                 border-radius: 6px;
+                font-size: 14px;
             }
-            .nav-links.mobile-open li:last-child a {
-                border-bottom: none;
-            }
-            .nav-links.mobile-open a svg {
+            .nav-links.mobile-open li a svg {
                 display: inline-block;
-                width: 14px;
-                height: 14px;
-                margin-right: 6px;
+                width: 20px;
+                height: 20px;
+                margin-right: 8px;
             }
+            .nav-links.mobile-open .nav-divider {
+                height: 1px;
+                background: var(--border);
+                margin: 6px 12px;
+            }
+        }
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 999;
+            pointer-events: auto;
+        }
+        .mobile-overlay.show {
+            display: block;
         }
         .nav-actions { display: flex; align-items: center; gap: 8px;
     order: 3;
@@ -281,9 +296,27 @@ const INDEX_HTML = `<!DOCTYPE html>
 
         /* ===== 下载操作组 ===== */
         .actions {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+        }
+        @media (max-width: 640px) {
+            .actions { grid-template-columns: repeat(3, 1fr); gap: 8px; }
         }
         .actions .btn { width: 100%; font-size: 11px; padding: 0 10px; height: 34px; }
+        .download-action {
+            grid-column: 1 / -1;
+            margin-top: 8px;
+        }
+        .download-action .btn {
+            width: 100%;
+            background: var(--accent-light);
+            border-color: var(--accent);
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .download-action .btn:hover {
+            background: var(--accent);
+            color: var(--accent-foreground);
+        }
 
         /* ===== 提示区 ===== */
         .hints {
@@ -488,7 +521,10 @@ const INDEX_HTML = `<!DOCTYPE html>
     .card { padding: 12px; }
     .input-wrapper { flex-direction: column; }
     .btn { width: 100%; max-width: 240px; margin: 0 auto 10px; height: 52px; font-size: 15px; }
-    .actions { grid-template-columns: 1fr; }
+    .actions { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .actions .btn { width: 100%; max-width: none; margin: 0 auto; height: 40px; font-size: 12px; }
+    .download-action { grid-column: 1 / -1; }
+    .download-action .btn { width: 100%; max-width: none; height: 44px; font-size: 13px; }
     .nav-actions { order: 2; }
     #menuToggle { order: 3; }
 }
@@ -541,9 +577,10 @@ const INDEX_HTML = `<!DOCTYPE html>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
                 GitHub
             </a></li>
+            <li class="nav-divider"></li>
             <li><a href="https://github.com/hunshcn/gh-proxy" target="_blank" rel="noopener">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v16h16"/><polyline points="20 10 12 18 8 14"/></svg>
-                Source
+                SOURCE
             </a></li>
         </ul>
     </div>
@@ -577,7 +614,7 @@ const INDEX_HTML = `<!DOCTYPE html>
             </button>
         </div>
         <div class="actions">
-            <button class="btn" id="aria2Btn" title="最快: 多线程下载命令 (推荐)" style="background:var(--accent-light);border-color:var(--accent);color:var(--accent)">
+            <button class="btn" id="aria2Btn" title="最快: 多线程下载命令 (推荐)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
                 aria2 (最快)
             </button>
@@ -590,8 +627,8 @@ const INDEX_HTML = `<!DOCTYPE html>
                 curl
             </button>
         </div>
-        <div class="actions" style="margin-top:8px">
-            <button class="btn" id="downloadBtn" title="直接打开加速链接" style="grid-column:1/-1">
+        <div class="actions download-action">
+            <button class="btn" id="downloadBtn" title="直接打开加速链接">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 直接下载 (浏览器)
             </button>
@@ -684,6 +721,7 @@ const INDEX_HTML = `<!DOCTYPE html>
     </div>
 </footer>
 
+<div class="mobile-overlay" id="mobileOverlay"></div>
 <!-- 拖拽提示 -->
 <div class="drag-overlay" id="dragOverlay">
     <div class="drag-overlay-inner">
@@ -718,6 +756,7 @@ const INDEX_HTML = `<!DOCTYPE html>
     const toastContainer = $('#toastContainer');
     const menuToggle = $('#menuToggle');
     const navLinks = $('#navLinks');
+    const mobileOverlay = $('#mobileOverlay');
 
     // ===== 工具函数 =====
     function getBaseUrl() { return location.origin + '/'; }
@@ -881,6 +920,12 @@ const INDEX_HTML = `<!DOCTYPE html>
     themeToggle.addEventListener('click', toggleTheme);
     menuToggle.addEventListener('click', () => {
         navLinks.classList.toggle('mobile-open');
+        mobileOverlay.classList.toggle('show');
+    });
+    
+    mobileOverlay.addEventListener('click', () => {
+        navLinks.classList.remove('mobile-open');
+        mobileOverlay.classList.remove('show');
     });
 
     // 示例点击
