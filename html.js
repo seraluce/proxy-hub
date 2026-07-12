@@ -340,7 +340,16 @@ const INDEX_HTML = `<!DOCTYPE html>
             white-space: nowrap;
         }
         .toast-success { background: #10b981; }
-        .toast-error { background: var(--error); }
+        .toast-error { 
+            position: fixed;
+            top: calc(50% - 100px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px dashed #dc2626;
+            color: #dc2626;
+            animation: toastErrorIn 0.3s ease, toastErrorOut 0.3s ease 2.5s forwards;
+        }
         .toast-info { background: var(--accent); }
         @keyframes toastIn {
             from { opacity: 0; transform: translateY(12px) scale(0.95); }
@@ -349,6 +358,14 @@ const INDEX_HTML = `<!DOCTYPE html>
         @keyframes toastOut {
             from { opacity: 1; transform: translateY(0) scale(1); }
             to { opacity: 0; transform: translateY(-8px) scale(0.95); }
+        }
+        @keyframes toastErrorIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        @keyframes toastErrorOut {
+            from { opacity: 1; transform: translateX(-50%) translateY(0); }
+            to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
         }
 
         /* ===== 页脚 ===== */
