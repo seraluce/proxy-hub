@@ -3,465 +3,658 @@ const INDEX_HTML = `<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub 代理加速 · Geist 风格</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.2.1/dist/geist.min.css">
+    <title>GitHub 资源加速 · GH Proxy</title>
+    <meta name="description" content="GitHub Release、Archive 及项目文件的加速下载服务，基于 Cloudflare Workers">
+    <meta name="theme-color" content="#0070f3">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230070f3' stroke-width='2'><polyline points='16 18 22 12 16 6'/><polyline points='8 6 2 12 8 18'/></svg>">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <style>
-        /* ========== CSS Variables (主题) ========== */
         :root {
-            --font-sans: 'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            --font-mono: 'Geist Mono', 'Fira Code', monospace;
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
             --bg: #ffffff;
             --bg-secondary: #fafafa;
             --bg-tertiary: #f0f0f0;
+            --bg-code: #f5f5f5;
             --fg: #000000;
             --fg-secondary: #666666;
-            --fg-tertiary: #888888;
+            --fg-tertiary: #999999;
             --border: #eaeaea;
+            --border-hover: #d0d0d0;
             --accent: #0070f3;
-            --accent-hover: #0761d1;
+            --accent-hover: #0060df;
             --accent-foreground: #ffffff;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --accent-light: rgba(0, 112, 243, 0.08);
+            --success: #0ea5e9;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow: 0 4px 12px rgba(0,0,0,0.06);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.08);
             --radius: 8px;
+            --radius-lg: 12px;
             --transition: 0.2s ease;
+            --transition-slow: 0.35s ease;
         }
-
         [data-theme="dark"] {
-            --bg: #000000;
+            --bg: #0a0a0a;
             --bg-secondary: #111111;
             --bg-tertiary: #1a1a1a;
-            --fg: #ffffff;
+            --bg-code: #161616;
+            --fg: #ededed;
             --fg-secondary: #888888;
-            --fg-tertiary: #666666;
-            --border: #333333;
+            --fg-tertiary: #555555;
+            --border: #2a2a2a;
+            --border-hover: #444444;
             --accent: #3291ff;
-            --accent-hover: #4a9eff;
+            --accent-hover: #5aabff;
             --accent-foreground: #000000;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            --accent-light: rgba(50, 145, 255, 0.1);
+            --success: #38bdf8;
+            --warning: #fbbf24;
+            --error: #f87171;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+            --shadow: 0 4px 12px rgba(0,0,0,0.3);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.4);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
             font-family: var(--font-sans);
             background: var(--bg);
             color: var(--fg);
-            transition: background var(--transition), color var(--transition);
+            transition: background var(--transition-slow), color var(--transition-slow);
             line-height: 1.6;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
+        ::selection { background: var(--accent); color: var(--accent-foreground); }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
 
-        /* ========== 导航栏 ========== */
+        /* ===== 导航栏 ===== */
         .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px; height: 56px;
             border-bottom: 1px solid var(--border);
-            background: var(--bg-secondary);
-            backdrop-filter: blur(8px);
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            background: color-mix(in srgb, var(--bg) 80%, transparent);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            position: sticky; top: 0; z-index: 100;
             transition: background var(--transition), border-color var(--transition);
-            flex-wrap: wrap;
-            gap: 12px;
         }
-
         .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            font-size: 18px;
-            letter-spacing: -0.02em;
-            color: var(--fg);
-            text-decoration: none;
+            display: flex; align-items: center; gap: 10px;
+            font-weight: 700; font-size: 16px; letter-spacing: -0.02em;
+            color: var(--fg); text-decoration: none;
         }
-
-        .nav-brand svg {
-            width: 24px;
-            height: 24px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
+        .nav-brand svg { width: 20px; height: 20px; }
         .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            list-style: none;
-            font-size: 14px;
-            flex-wrap: wrap;
+            display: flex; align-items: center; gap: 8px; list-style: none; font-size: 13px;
         }
-
         .nav-links a {
-            color: var(--fg-secondary);
-            text-decoration: none;
-            transition: color var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 4px;
+            color: var(--fg-secondary); text-decoration: none; padding: 6px 12px;
+            border-radius: 6px; transition: all var(--transition);
+            display: flex; align-items: center; gap: 5px;
         }
-
-        .nav-links a:hover { color: var(--fg); }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .nav-links a:hover { color: var(--fg); background: var(--accent-light); }
+        .nav-links a svg { width: 14px; height: 14px; }
+        .nav-actions { display: flex; align-items: center; gap: 8px; }
+        .icon-btn {
+            background: transparent; border: 1px solid var(--border); border-radius: 6px;
+            padding: 7px 8px; cursor: pointer; color: var(--fg-secondary);
+            transition: all var(--transition); display: flex; align-items: center; justify-content: center;
         }
+        .icon-btn:hover { background: var(--bg-tertiary); color: var(--fg); border-color: var(--border-hover); }
+        .icon-btn svg { width: 16px; height: 16px; }
 
-        .theme-toggle {
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 6px 10px;
-            cursor: pointer;
-            color: var(--fg-secondary);
-            transition: all var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .theme-toggle:hover {
-            background: var(--border);
-            color: var(--fg);
-        }
-
-        .theme-toggle svg {
-            width: 18px;
-            height: 18px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        /* ========== 主容器 ========== */
+        /* ===== 主容器 ===== */
         .container {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 40px 24px;
-            flex: 1;
-            width: 100%;
+            max-width: 680px; margin: 0 auto; padding: 48px 24px 64px;
+            flex: 1; width: 100%;
         }
+        .hero { text-align: center; margin-bottom: 40px; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 12px; border-radius: 20px;
+            background: var(--accent-light); color: var(--accent);
+            font-size: 12px; font-weight: 600; letter-spacing: 0.02em;
+            margin-bottom: 16px; border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+        }
+        .hero-badge .dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--accent); animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
+        }
+        .hero h1 {
+            font-size: 36px; font-weight: 700; letter-spacing: -0.04em;
+            line-height: 1.15; margin-bottom: 12px;
+        }
+        .hero p { color: var(--fg-secondary); font-size: 15px; max-width: 480px; margin: 0 auto; }
 
         .card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 32px;
+            background: var(--bg-secondary); border: 1px solid var(--border);
+            border-radius: var(--radius-lg); padding: 28px;
             box-shadow: var(--shadow);
             transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
         }
+        .card:focus-within { box-shadow: var(--shadow-lg); border-color: var(--border-hover); }
 
-        .card-header { margin-bottom: 24px; }
-        .card-header h1 {
-            font-size: 28px;
-            font-weight: 600;
-            letter-spacing: -0.03em;
-            line-height: 1.2;
-            margin-bottom: 8px;
+        /* ===== 输入区域 ===== */
+        .input-group { margin-bottom: 20px; }
+        .input-wrapper {
+            position: relative; display: flex; gap: 8px;
         }
-        .card-header p {
-            color: var(--fg-secondary);
-            font-size: 15px;
+        .input-wrapper input {
+            flex: 1; min-width: 0;
+            padding: 14px 44px 14px 16px;
+            font-family: var(--font-mono); font-size: 13px;
+            background: var(--bg); color: var(--fg);
+            border: 1px solid var(--border); border-radius: var(--radius);
+            outline: none; transition: all var(--transition);
         }
-
-        /* ========== 输入框 ========== */
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .input-row {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .input-row input {
-            flex: 1;
-            min-width: 200px;
-            padding: 12px 16px;
-            font-family: var(--font-mono);
-            font-size: 14px;
-            background: var(--bg);
-            color: var(--fg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            outline: none;
-            transition: border-color var(--transition), box-shadow var(--transition);
-        }
-
-        .input-row input:focus {
+        .input-wrapper input:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.15);
+            box-shadow: 0 0 0 3px var(--accent-light);
         }
-
-        .input-row input::placeholder { color: var(--fg-tertiary); }
+        .input-wrapper input::placeholder { color: var(--fg-tertiary); }
+        .input-clear {
+            position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+            background: var(--bg-tertiary); border: none; border-radius: 50%;
+            width: 22px; height: 22px; cursor: pointer; display: none;
+            align-items: center; justify-content: center;
+            color: var(--fg-tertiary); font-size: 14px; line-height: 1;
+            transition: all var(--transition);
+        }
+        .input-clear:hover { background: var(--border); color: var(--fg); }
+        .input-wrapper input:not(:placeholder-shown) + .input-clear { display: flex; }
 
         .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px 24px;
-            font-family: var(--font-sans);
-            font-size: 14px;
-            font-weight: 500;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            background: var(--bg-tertiary);
-            color: var(--fg);
-            cursor: pointer;
-            transition: all var(--transition);
-            text-decoration: none;
-            white-space: nowrap;
-            min-height: 48px;
+            display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+            padding: 0 20px; height: 44px;
+            font-family: var(--font-sans); font-size: 13px; font-weight: 500;
+            border: 1px solid var(--border); border-radius: var(--radius);
+            background: var(--bg-tertiary); color: var(--fg);
+            cursor: pointer; transition: all var(--transition);
+            text-decoration: none; white-space: nowrap; user-select: none;
         }
-
-        .btn:hover {
-            background: var(--border);
-            transform: translateY(-1px);
-        }
-
+        .btn:hover { background: var(--border); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+        .btn:active { transform: translateY(0); }
+        .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
         .btn-primary {
-            background: var(--accent);
-            color: var(--accent-foreground);
-            border-color: var(--accent);
+            background: var(--accent); color: var(--accent-foreground); border-color: var(--accent);
+            font-weight: 600;
+        }
+        .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+        .btn-primary:active { opacity: 0.9; }
+
+        /* ===== 下载操作组 ===== */
+        .actions {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+        }
+        .actions .btn { width: 100%; font-size: 12px; padding: 0 12px; height: 40px; }
+
+        /* ===== 提示区 ===== */
+        .hints {
+            margin-top: 16px; padding: 14px 16px;
+            background: var(--bg-code); border-radius: var(--radius);
+            font-family: var(--font-mono); font-size: 12px; color: var(--fg-secondary);
+            display: none; line-height: 1.8; word-break: break-all;
+            border: 1px solid var(--border);
+        }
+        .hints.show { display: block; animation: slideDown 0.2s ease; }
+        .hints code { color: var(--accent); }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .btn-primary:hover {
-            background: var(--accent-hover);
-            border-color: var(--accent-hover);
-            color: var(--accent-foreground);
+        /* ===== 分割线 ===== */
+        .divider {
+            display: flex; align-items: center; gap: 12px;
+            margin: 20px 0; font-size: 12px; color: var(--fg-tertiary);
+        }
+        .divider::before, .divider::after {
+            content: ''; flex: 1; height: 1px; background: var(--border);
         }
 
-        .btn svg {
-            width: 18px;
-            height: 18px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        /* ========== 下载按钮组 ========== */
-        .download-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 8px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border);
-        }
-
-        .download-group .btn { flex: 1; min-width: 100px; }
-
-        /* ========== 示例链接 ========== */
-        .examples {
-            margin-top: 24px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border);
-        }
-
+        /* ===== 示例链接 ===== */
+        .examples { margin-top: 0; }
         .examples-title {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--fg-secondary);
-            margin-bottom: 10px;
+            font-size: 12px; font-weight: 600; color: var(--fg-tertiary);
+            text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px;
         }
-
-        .examples-list {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .examples-list code {
-            display: block;
-            padding: 8px 12px;
-            font-family: var(--font-mono);
-            font-size: 13px;
-            background: var(--bg-tertiary);
-            border-radius: 4px;
-            color: var(--fg-secondary);
-            cursor: pointer;
-            transition: all var(--transition);
+        .example-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px; border-radius: 6px;
+            cursor: pointer; transition: all var(--transition);
             border: 1px solid transparent;
-            word-break: break-all;
+        }
+        .example-item:hover {
+            background: var(--accent-light); border-color: color-mix(in srgb, var(--accent) 15%, transparent);
+        }
+        .example-item .icon { color: var(--fg-tertiary); flex-shrink: 0; }
+        .example-item .icon svg { width: 14px; height: 14px; }
+        .example-item .text {
+            font-family: var(--font-mono); font-size: 12px; color: var(--fg-secondary);
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
+        }
+        .example-item:hover .text { color: var(--fg); }
+        .example-tag {
+            font-size: 10px; padding: 2px 6px; border-radius: 4px;
+            background: var(--bg-tertiary); color: var(--fg-tertiary); font-weight: 500;
+            flex-shrink: 0;
         }
 
-        .examples-list code:hover {
-            background: var(--border);
-            color: var(--fg);
-            border-color: var(--border);
+        /* ===== Toast 通知 ===== */
+        .toast-container {
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+            z-index: 9999; display: flex; flex-direction: column-reverse; gap: 8px;
+            pointer-events: none;
+        }
+        .toast {
+            padding: 10px 20px; border-radius: var(--radius);
+            font-size: 13px; font-weight: 500;
+            color: #fff; pointer-events: auto;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            animation: toastIn 0.3s ease, toastOut 0.3s ease 2.5s forwards;
+            white-space: nowrap;
+        }
+        .toast-success { background: #10b981; }
+        .toast-error { background: var(--error); }
+        .toast-info { background: var(--accent); }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(12px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to { opacity: 0; transform: translateY(-8px) scale(0.95); }
         }
 
-        /* ========== 页脚 ========== */
+        /* ===== 页脚 ===== */
         .footer {
-            text-align: center;
-            padding: 24px;
-            font-size: 13px;
-            color: var(--fg-tertiary);
-            border-top: 1px solid var(--border);
-            background: var(--bg-secondary);
-            transition: all var(--transition);
+            text-align: center; padding: 20px 24px; font-size: 12px;
+            color: var(--fg-tertiary); border-top: 1px solid var(--border);
+            background: var(--bg-secondary); transition: all var(--transition);
         }
+        .footer a { color: var(--fg-secondary); text-decoration: none; transition: color var(--transition); }
+        .footer a:hover { color: var(--accent); }
+        .footer-links { display: flex; justify-content: center; gap: 16px; margin-top: 6px; }
 
-        .footer a {
-            color: var(--fg-secondary);
-            text-decoration: none;
+        /* ===== 拖拽提示 ===== */
+        .drag-overlay {
+            display: none; position: fixed; inset: 0;
+            background: color-mix(in srgb, var(--bg) 85%, transparent);
+            backdrop-filter: blur(4px);
+            z-index: 999; align-items: center; justify-content: center;
         }
-        .footer a:hover { color: var(--fg); }
+        .drag-overlay.show { display: flex; }
+        .drag-overlay-inner {
+            border: 2px dashed var(--accent); border-radius: var(--radius-lg);
+            padding: 48px 64px; text-align: center;
+            background: var(--accent-light);
+        }
+        .drag-overlay-inner svg { width: 40px; height: 40px; color: var(--accent); margin-bottom: 12px; }
+        .drag-overlay-inner p { color: var(--fg); font-size: 16px; font-weight: 600; }
 
-        /* ========== 响应式 ========== */
+        /* ===== 响应式 ===== */
         @media (max-width: 640px) {
-            .navbar {
-                padding: 12px 16px;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 8px;
-            }
-            .nav-links {
-                justify-content: center;
-                gap: 14px;
-                font-size: 13px;
-            }
-            .nav-actions { justify-content: center; }
-            .container { padding: 20px 16px; }
+            .navbar { padding: 0 16px; }
+            .nav-links { display: none; }
+            .container { padding: 32px 16px 48px; }
+            .hero h1 { font-size: 28px; }
+            .hero p { font-size: 14px; }
             .card { padding: 20px; }
-            .card-header h1 { font-size: 24px; }
-            .input-row { flex-direction: column; }
-            .input-row input { min-width: unset; width: 100%; }
-            .btn { width: 100%; justify-content: center; }
-            .download-group .btn { min-width: unset; }
-            .theme-toggle span { display: none; }
+            .input-wrapper { flex-direction: column; }
+            .btn { width: 100%; height: 44px; }
+            .actions { grid-template-columns: 1fr; }
         }
-
         @media (max-width: 480px) {
-            .nav-links a span { display: none; }
-            .download-group { flex-direction: column; }
+            .hero { margin-bottom: 28px; }
+            .hero h1 { font-size: 24px; }
         }
-
         .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            border: 0;
+            position: absolute; width: 1px; height: 1px; padding: 0;
+            margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0;
         }
     </style>
 </head>
 <body>
 
-    <!-- ==================== 导航栏 ==================== -->
-    <nav class="navbar" role="navigation" aria-label="主导航">
-        <a href="/" class="nav-brand">
-            <svg viewBox="0 0 24 24">
-                <polyline points="16 18 22 12 16 6"></polyline>
-                <polyline points="8 6 2 12 8 18"></polyline>
+<!-- 导航栏 -->
+<nav class="navbar" role="navigation" aria-label="主导航">
+    <a href="/" class="nav-brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+        <span>GH Proxy</span>
+    </a>
+    <ul class="nav-links">
+        <li><a href="https://github.com" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            GitHub
+        </a></li>
+        <li><a href="https://github.com/hunshcn/gh-proxy" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v16h16"/><polyline points="20 10 12 18 8 14"/></svg>
+            Source
+        </a></li>
+    </ul>
+    <div class="nav-actions">
+        <button class="icon-btn" id="themeToggle" aria-label="切换主题" title="切换深色/浅色模式">
+            <svg id="sunIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/>
+                <line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/>
+                <line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
             </svg>
-            <span>GH Proxy</span>
-        </a>
+            <svg id="moonIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+        </button>
+    </div>
+</nav>
 
-        <ul class="nav-links">
-            <li><a href="https://github.com" target="_blank" rel="noopener noreferrer">
-                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-                <span>GitHub</span>
-            </a></li>
-            <li><a href="https://github.com/hunshcn/gh-proxy" target="_blank" rel="noopener noreferrer">
-                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M4 4v16h16"></path><polyline points="20 10 12 18 8 14"></polyline></svg>
-                <span>Source</span>
-            </a></li>
-        </ul>
+<!-- 主内容 -->
+<main class="container">
+    <div class="hero">
+        <div class="hero-badge"><span class="dot"></span>Cloudflare Workers 加速</div>
+        <h1>GitHub 资源加速</h1>
+        <p>输入 GitHub 链接，通过 Cloudflare 边缘节点加速下载 Release、源码和文件</p>
+    </div>
 
-        <div class="nav-actions">
-            <button class="theme-toggle" id="themeToggle" aria-label="切换深色/浅色模式">
-                <svg id="themeIcon" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="5"></circle>
-                    <line x1="12" y1="1" x2="12" y2="3"></line>
-                    <line x1="12" y1="21" x2="12" y2="23"></line>
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                    <line x1="1" y1="12" x2="3" y2="12"></line>
-                    <line x1="21" y1="12" x2="23" y2="12"></line>
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                </svg>
-                <span id="themeLabel">浅色</span>
+    <div class="card">
+        <div class="input-group">
+            <div class="input-wrapper">
+                <input type="url" id="inputUrl" placeholder="粘贴 GitHub 链接..." autofocus spellcheck="false" autocomplete="off">
+                <button class="input-clear" id="clearBtn" aria-label="清除">&times;</button>
+            </div>
+        </div>
+        <div class="input-wrapper" style="margin-bottom:16px">
+            <button class="btn btn-primary" id="goBtn" style="flex:1">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                加速打开
             </button>
         </div>
-    </nav>
+        <div class="actions">
+            <button class="btn" id="wgetBtn" title="复制 wget 下载命令">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+                wget
+            </button>
+            <button class="btn" id="curlBtn" title="复制 curl 下载命令">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+                curl
+            </button>
+            <button class="btn" id="downloadBtn" title="直接打开加速链接">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                下载
+            </button>
+        </div>
+        <div class="hints" id="hints"></div>
 
-    <!-- ==================== 主内容 ==================== -->
-    <main class="container">
-        <div class="card">
-            <div class="card-header">
-                <h1>GitHub 资源加速</h1>
-                <p>输入 GitHub 链接，快速下载 Release、代码或 Raw 文件。</p>
+        <div class="divider">示例</div>
+
+        <div class="examples">
+            <div class="example-item" data-url="https://github.com/hunshcn/gh-proxy/releases/download/v0.1.0/example.zip">
+                <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+                <span class="text">github.com/.../releases/download/v1.0/file.zip</span>
+                <span class="example-tag">Release</span>
             </div>
-
-            <div class="input-group">
-                <div class="input-row">
-                    <input type="url" id="inputUrl" placeholder="https://github.com/user/repo/releases/download/v1.0/file.zip" autofocus spellcheck="false">
-                    <button class="btn btn-primary" id="goBtn">
-                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-                        打开
-                    </button>
-                </div>
-                <div class="download-group">
-                    <button class="btn" id="wgetBtn">
-                        <svg viewBox="0 0 24 24"><polyline points="7 13 12 18 17 13"></polyline><polyline points="7 6 12 11 17 6"></polyline></svg>
-                        wget 命令
-                    </button>
-                    <button class="btn" id="curlBtn">
-                        <svg viewBox="0 0 24 24"><polyline points="7 13 12 18 17 13"></polyline><polyline points="7 6 12 11 17 6"></polyline></svg>
-                        curl 命令
-                    </button>
-                    <button class="btn" id="downloadBtn">
-                        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                        直接下载
-                    </button>
-                </div>
+            <div class="example-item" data-url="https://github.com/facebook/react/archive/refs/heads/main.zip">
+                <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></span>
+                <span class="text">github.com/.../archive/refs/heads/main.zip</span>
+                <span class="example-tag">Archive</span>
             </div>
-
-            <div class="examples">
-                <p class="examples-title">📋 快速示例 (点击填充)</p>
-                <div class="examples-list">
-                    <code>https://github.com/hunshcn/gh-proxy/blob/master/index.js</code>
-                    <code>https://github.com/facebook/react/releases</code>
-                    <code>https://raw.githubusercontent.com/nodejs/node/main/README.md</code>
-                </div>
+            <div class="example-item" data-url="https://github.com/vercel/next.js/blob/canary/package.json">
+                <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></span>
+                <span class="text">github.com/.../blob/main/package.json</span>
+                <span class="example-tag">Code → jsDelivr</span>
+            </div>
+            <div class="example-item" data-url="https://raw.githubusercontent.com/nodejs/node/main/README.md">
+                <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+                <span class="text">raw.githubusercontent.com/.../README.md</span>
+                <span class="example-tag">Raw → jsDelivr</span>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 
-    <!-- ==================== 页脚 ==================== -->
-    <footer class="footer">
-        <p>
-            <a href="/">GH Proxy</a> · 
-            基于 <a href="https://cloudflare.com" target="_blank" rel="noopener noreferrer">Cloudflare Workers</a> 构建 · 
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer">开源</a>
-        </p>
-    </footer>
+<!-- 页脚 -->
+<footer class="footer">
+    <div>基于 Cloudflare Workers 构建 · 免费、开源、无服务器</div>
+    <div class="footer-links">
+        <a href="https://github.com/hunshcn/gh-proxy" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://workers.cloudflare.com" target="_blank" rel="noopener">Cloudflare Workers</a>
+        <a href="https://github.com/hunshcn/gh-proxy/blob/master/LICENSE" target="_blank" rel="noopener">MIT License</a>
+    </div>
+</footer>
 
-    <!-- ==================== 引用 JS ==================== -->
-    <script src="/app.js"></script>
+<!-- 拖拽提示 -->
+<div class="drag-overlay" id="dragOverlay">
+    <div class="drag-overlay-inner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <p>释放以粘贴链接</p>
+    </div>
+</div>
+
+<!-- Toast 容器 -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+(function() {
+    'use strict';
+
+    // ===== DOM =====
+    const $ = s => document.querySelector(s);
+    const input = $('#inputUrl');
+    const goBtn = $('#goBtn');
+    const wgetBtn = $('#wgetBtn');
+    const curlBtn = $('#curlBtn');
+    const downloadBtn = $('#downloadBtn');
+    const hintsEl = $('#hints');
+    const clearBtn = $('#clearBtn');
+    const themeToggle = $('#themeToggle');
+    const sunIcon = $('#sunIcon');
+    const moonIcon = $('#moonIcon');
+    const dragOverlay = $('#dragOverlay');
+    const toastContainer = $('#toastContainer');
+
+    // ===== 工具函数 =====
+    function getBaseUrl() { return location.origin + '/'; }
+
+    function buildProxyUrl(raw) {
+        raw = raw.trim();
+        if (!raw) return null;
+        if (raw.startsWith(getBaseUrl())) return raw;
+        if (/^https?:\\/\\//.test(raw)) return getBaseUrl() + raw;
+        if (/^github\\.com\\//.test(raw) || /^raw\\.githubusercontent\\.com\\//.test(raw)) return getBaseUrl() + 'https://' + raw;
+        return getBaseUrl() + 'https://' + raw;
+    }
+
+    function isValidGitHubUrl(url) {
+        return /github\\.com|githubusercontent\\.com/i.test(url);
+    }
+
+    function extractFilename(url) {
+        try {
+            const parts = url.split('/');
+            return parts[parts.length - 1] || 'download';
+        } catch { return 'download'; }
+    }
+
+    // ===== Toast =====
+    function toast(msg, type = 'info') {
+        const el = document.createElement('div');
+        el.className = 'toast toast-' + type;
+        el.textContent = msg;
+        toastContainer.appendChild(el);
+        setTimeout(() => el.remove(), 3000);
+    }
+
+    // ===== 复制 =====
+    async function copyText(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            toast('已复制到剪贴板', 'success');
+            return true;
+        } catch {
+            // fallback
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); toast('已复制到剪贴板', 'success'); }
+            catch { toast('复制失败', 'error'); }
+            ta.remove();
+            return false;
+        }
+    }
+
+    // ===== 主题 =====
+    function initTheme() {
+        const saved = localStorage.getItem('gh-proxy-theme');
+        if (saved === 'dark' || (!saved && matchMedia('(prefers-color-scheme:dark)').matches)) {
+            setTheme('dark');
+        } else {
+            setTheme('light');
+        }
+    }
+    function setTheme(t) {
+        document.documentElement.setAttribute('data-theme', t);
+        localStorage.setItem('gh-proxy-theme', t);
+        if (t === 'dark') {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = '';
+        } else {
+            sunIcon.style.display = '';
+            moonIcon.style.display = 'none';
+        }
+    }
+    function toggleTheme() {
+        const cur = document.documentElement.getAttribute('data-theme');
+        setTheme(cur === 'dark' ? 'light' : 'dark');
+    }
+
+    // ===== 输入处理 =====
+    function updateHints() {
+        const raw = input.value.trim();
+        if (!raw || !isValidGitHubUrl(raw)) {
+            hintsEl.classList.remove('show');
+            return;
+        }
+        const proxy = buildProxyUrl(raw);
+        hintsEl.innerHTML =
+            '<strong>加速链接</strong><br><code>' + escHtml(proxy) + '</code>';
+        hintsEl.classList.add('show');
+    }
+
+    function escHtml(s) {
+        return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function handleGo() {
+        const raw = input.value.trim();
+        if (!raw) { toast('请输入 GitHub 链接', 'error'); input.focus(); return; }
+        if (!isValidGitHubUrl(raw)) { toast('请输入有效的 GitHub 链接', 'error'); return; }
+        const url = buildProxyUrl(raw);
+        if (url) window.open(url, '_blank');
+    }
+
+    function handleWget() {
+        const raw = input.value.trim();
+        if (!raw || !isValidGitHubUrl(raw)) { toast('请先输入 GitHub 链接', 'error'); return; }
+        const url = buildProxyUrl(raw);
+        const fn = extractFilename(raw);
+        copyText('wget -O ' + fn + ' "' + url + '"');
+    }
+
+    function handleCurl() {
+        const raw = input.value.trim();
+        if (!raw || !isValidGitHubUrl(raw)) { toast('请先输入 GitHub 链接', 'error'); return; }
+        const url = buildProxyUrl(raw);
+        const fn = extractFilename(raw);
+        copyText('curl -L -o ' + fn + ' "' + url + '"');
+    }
+
+    function handleDownload() {
+        const raw = input.value.trim();
+        if (!raw || !isValidGitHubUrl(raw)) { toast('请先输入 GitHub 链接', 'error'); return; }
+        const url = buildProxyUrl(raw);
+        window.open(url, '_blank');
+    }
+
+    // ===== 事件绑定 =====
+    input.addEventListener('input', updateHints);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') handleGo(); });
+    clearBtn.addEventListener('click', () => { input.value = ''; updateHints(); input.focus(); });
+    goBtn.addEventListener('click', handleGo);
+    wgetBtn.addEventListener('click', handleWget);
+    curlBtn.addEventListener('click', handleCurl);
+    downloadBtn.addEventListener('click', handleDownload);
+    themeToggle.addEventListener('click', toggleTheme);
+
+    // 示例点击
+    document.querySelectorAll('.example-item').forEach(el => {
+        el.addEventListener('click', () => {
+            input.value = el.dataset.url;
+            updateHints();
+            input.focus();
+            input.select();
+        });
+    });
+
+    // 拖拽 URL
+    let dragCounter = 0;
+    document.addEventListener('dragenter', e => {
+        e.preventDefault();
+        dragCounter++;
+        if (e.dataTransfer.types.includes('text/plain')) dragOverlay.classList.add('show');
+    });
+    document.addEventListener('dragleave', () => {
+        dragCounter--;
+        if (dragCounter <= 0) { dragCounter = 0; dragOverlay.classList.remove('show'); }
+    });
+    document.addEventListener('dragover', e => e.preventDefault());
+    document.addEventListener('drop', e => {
+        e.preventDefault();
+        dragCounter = 0;
+        dragOverlay.classList.remove('show');
+        const text = (e.dataTransfer.getData('text/plain') || '').trim();
+        if (text && isValidGitHubUrl(text)) {
+            input.value = text;
+            updateHints();
+            toast('已粘贴链接', 'info');
+        }
+    });
+
+    // 粘贴事件
+    input.addEventListener('paste', e => {
+        setTimeout(updateHints, 50);
+    });
+
+    // ===== 初始化 =====
+    initTheme();
+    updateHints();
+
+    // 自动填充 URL 参数
+    const params = new URLSearchParams(location.search);
+    if (params.has('q')) {
+        input.value = params.get('q');
+        updateHints();
+    }
+})();
+</script>
 </body>
-</html>`
+</html>`;
 
 export default INDEX_HTML

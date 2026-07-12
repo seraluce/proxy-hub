@@ -1,7 +1,20 @@
 name = "gh-proxy"
 main = "index.js"
-compatibility_date = "2024-01-01"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
 
+# KV 缓存命名空间 (大文件持久缓存)
 kv_namespaces = [
     { binding = "GH_CACHE", id = "b944ad81eb904723b5eb29cccdf0f15b" }
 ]
+
+# 可选: 自定义域名路由 (取消注释并填入你的域名)
+# routes = [
+#     { pattern = "gh-proxy.example.com/*", zone_name = "example.com" }
+# ]
+
+# 可选: Workers Dev 域名
+# workers_dev = true
+
+# 日志级别
+log_level = "warn"
