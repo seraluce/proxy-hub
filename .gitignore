@@ -1,2 +1,18 @@
+# Dependencies
 node_modules/
+.pnp.*
+
+# Build output
+dist/
 .wrangler/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

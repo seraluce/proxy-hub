@@ -1,0 +1,12 @@
+# 规则源列表（每行一个 URL，# 开头为注释）
+# 以下源如果失败不影响主流程，geosite.dat 已包含核心规则
+
+# v2fly 域名列表社区直连规则
+https://raw.githubusercontent.com/v2fly/domain-list-community/master/geosite/cn
+
+# Loyalsoldier 直连规则
+https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/direct.txt
+
+# 常见国内服务域名（可选）
+# https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf
+

@@ -1,0 +1,277 @@
+name: 规则合并（完整版）
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 下载并完整解析 geosite.dat
+        run: |
+          echo "📥 下载 Loyalsoldier 规则集..."
+          curl -sSL --connect-timeout 15 --max-time 120 -o geosite.dat https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/geosite.dat || {
+            echo "❌ 下载 geosite.dat 失败"
+            exit 1
+          }
+
+          echo "🔧 用纯 Python 解析 geosite.dat（无需第三方依赖）..."
+          python3 << 'PYEOF'
+          import sys
+
+          # 纯 Python protobuf 解码 geosite.dat（零依赖）
+          def read_varint(data, pos):
+              result = 0
+              shift = 0
+              while pos < len(data):
+                  b = data[pos]
+                  result |= (b & 0x7f) << shift
+                  pos += 1
+                  if not (b & 0x80):
+                      break
+                  shift += 7
+              return result, pos
+
+          def decode_field(data, pos):
+              if pos >= len(data):
+                  return None, None, None, pos
+              tag, pos = read_varint(data, pos)
+              field_number = tag >> 3
+              wire_type = tag & 0x07
+              if wire_type == 0:
+                  value, pos = read_varint(data, pos)
+                  return field_number, wire_type, value, pos
+              elif wire_type == 2:
+                  length, pos = read_varint(data, pos)
+                  if pos + length > len(data):
+                      return field_number, wire_type, b"", len(data)
+                  value = data[pos:pos+length]
+                  return field_number, wire_type, value, pos + length
+              else:
+                  return field_number, wire_type, None, len(data)
+
+          def decode_string(data):
+              return data.decode('utf-8', errors='replace')
+
+          def decode_entries(data):
+              entries = []
+              pos = 0
+              while pos < len(data):
+                  fn, wt, val, pos = decode_field(data, pos)
+                  if fn == 1 and wt == 2:
+                      entries.append(decode_string(val))
+              return entries
+
+          def decode_geosite(data):
+              tags = {}
+              pos = 0
+              country_code = ""
+              while pos < len(data):
+                  fn, wt, val, pos = decode_field(data, pos)
+                  if fn == 1 and wt == 2:
+                      country_code = decode_string(val)
+                  elif fn == 2 and wt == 2:
+                      entries = decode_entries(val)
+                      if country_code:
+                          if country_code not in tags:
+                              tags[country_code] = set()
+                          for e in entries:
+                              tags[country_code].add(e)
+              return tags
+
+          try:
+              with open('geosite.dat', 'rb') as f:
+                  gs_data = f.read()
+              tags = decode_geosite(gs_data)
+          except Exception as e:
+              print(f"❌ 解析失败: {e}")
+              sys.exit(1)
+
+          print(f"✅ 成功解析，共 {len(tags)} 个分类")
+          if tags:
+              print(f"   分类列表: {', '.join(sorted(tags.keys())[:15])}...")
+
+          domains = set()
+          suffix_domains = set()
+          target_tags = ['cn', 'gov', 'edu', 'mil']
+
+          for tag_name in target_tags:
+              tag_data = tags.get(tag_name, set())
+              if not tag_data:
+                  print(f"⚠️ 分类 '{tag_name}' 未找到或为空")
+                  continue
+              count = 0
+              for item in tag_data:
+                  domain_str = item.strip()
+                  if domain_str.startswith('domain:'):
+                      domains.add(domain_str[7:].lower())
+                      count += 1
+                  elif domain_str.startswith('suffix:'):
+                      suffix_domains.add(domain_str[7:].lower())
+                      count += 1
+                  elif domain_str.startswith('full:'):
+                      domains.add(domain_str[5:].lower())
+                      count += 1
+                  elif domain_str.startswith('keyword:') or domain_str.startswith('regexp:'):
+                      pass  # 跳过关键词和正则规则
+                  elif '.' in domain_str and len(domain_str) > 3:
+                      domains.add(domain_str.lower())
+                      count += 1
+              print(f"   [{tag_name}] 提取 {count} 条规则")
+
+          domains.update(suffix_domains)
+
+          print(f"✅ 共提取 {len(domains)} 个域名，其中 {len(suffix_domains)} 个是后缀规则")
+
+          with open('loyalsoldier_domains.txt', 'w') as f:
+              for d in sorted(domains):
+                  f.write(d + '\n')
+
+          gov_count = sum(1 for d in domains if 'gov.cn' in d)
+          print(f"📊 包含 gov.cn 的条目数: {gov_count}")
+          if gov_count > 0:
+              print("  示例: " + ', '.join(sorted(d for d in domains if 'gov.cn' in d)[:5]))
+          PYEOF
+
+      - name: 合并其他规则源
+        run: |
+          if [ ! -f sources.txt ]; then
+            echo "⚠️ sources.txt 不存在，创建空文件"
+            > sources.txt
+          fi
+
+          > raw.txt
+          > failed.txt
+
+          if [ -s loyalsoldier_domains.txt ]; then
+            cat loyalsoldier_domains.txt >> raw.txt
+            echo "✅ 已加入 Loyalsoldier 规则 ($(wc -l < loyalsoldier_domains.txt) 条)"
+          else
+            echo "⚠️ loyalsoldier_domains.txt 为空或不存在，跳过"
+          fi
+
+          success_num=0
+          fail_num=0
+          while read -r url; do
+            [[ -z "$url" || "$url" =~ ^# ]] && continue
+            echo "📥 下载: $url"
+            content=$(curl -sSL --connect-timeout 15 --max-time 60 "$url" 2>/dev/null || true)
+            if [ -n "$content" ]; then
+              # 兼容多种格式：纯域名、YAML (- +.domain)、ACL、dnsmasq (server=/domain/)
+              echo "$content" | \
+                sed 's/^- +\.\([a-zA-Z0-9].*\)/\1/' | \
+                sed 's/^server=\/\([a-zA-Z0-9].*\)/\1/' | \
+                sed 's/^\*\.\([a-zA-Z0-9].*\)/\1/' | \
+                grep -oE '([a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}' | \
+                grep -v '^[0-9]' | \
+                grep -v '^\*' >> raw.txt || true
+              echo "   ✅ 成功"
+              success_num=$((success_num + 1))
+            else
+              echo "   ⚠️ 失败，跳过"
+              echo "$url" >> failed.txt
+              fail_num=$((fail_num + 1))
+            fi
+          done < sources.txt
+
+          echo "📊 外部源统计: 成功 $success_num 个, 失败 $fail_num 个"
+
+          if [ ! -s raw.txt ]; then
+            echo "# 空规则集" > direct.txt
+          else
+            cat raw.txt | awk '{print tolower($0)}' | sort -u | awk 'length($0) > 3' > direct.txt
+            echo "✅ 合并完成！共 $(wc -l < direct.txt) 条规则"
+          fi
+
+      - name: 合并自定义规则
+        run: |
+          if [ -f custom.txt ]; then
+            echo "📥 合并自定义规则..."
+            cat custom.txt | grep -v '^#' | grep -v '^$' | \
+              grep -oE '([a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}' | \
+              sort -u >> direct.txt
+            echo "✅ 已合并自定义规则"
+          else
+            echo "ℹ️ custom.txt 不存在，跳过自定义规则合并"
+          fi
+
+          # 最终去重排序
+          sort -u direct.txt -o direct.txt
+          echo "📊 最终规则总数: $(wc -l < direct.txt)"
+
+      - name: 生成 Clash 格式
+        run: |
+          {
+            echo "# 自动生成于 $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+            echo "# 上游来源: v2fly/domain-list-community + 自定义规则"
+            echo "# 类型: 直连规则（中国域名直连）"
+            echo "payload:"
+            if [ -s direct.txt ]; then
+              total=$(wc -l < direct.txt)
+              cat direct.txt | head -n 50000 | sed 's/^/  - "+./' | sed 's/$/"/'
+              echo "# 共 ${total} 条规则（仅导出前50000条）"
+            else
+              echo "  - '+.example.com'  # 占位"
+            fi
+          } > direct_clash.yaml
+          echo "✅ Clash 格式已生成"
+
+      - name: 验证输出文件
+        run: |
+          echo "🔍 验证输出文件..."
+          
+          # 检查 direct.txt
+          if [ -f direct.txt ]; then
+            lines=$(wc -l < direct.txt)
+            echo "   direct.txt: $lines 行"
+            if [ "$lines" -lt 1 ]; then
+              echo "❌ direct.txt 为空"
+              exit 1
+            fi
+          else
+            echo "❌ direct.txt 不存在"
+            exit 1
+          fi
+          
+          # 检查 direct_clash.yaml
+          if [ -f direct_clash.yaml ]; then
+            lines=$(wc -l < direct_clash.yaml)
+            echo "   direct_clash.yaml: $lines 行"
+            if ! grep -q "payload:" direct_clash.yaml; then
+              echo "❌ direct_clash.yaml 缺少 payload 字段"
+              exit 1
+            fi
+          else
+            echo "❌ direct_clash.yaml 不存在"
+            exit 1
+          fi
+          
+          echo "✅ 验证通过"
+
+      - name: 提交并推送
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase || echo "没有可拉取的更新"
+          git add direct.txt direct_clash.yaml 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "ℹ️ 没有新规则，跳过提交"
+            exit 0
+          fi
+          git commit -m "🔄 自动更新规则 $(date -u '+%Y-%m-%d %H:%M')"
+          git push
+          echo "🎉 完成！"
+
+      - name: 清理
+        if: always()
+        run: rm -f geosite.dat raw.txt loyalsoldier_domains.txt failed.txt
