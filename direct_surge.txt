@@ -1,5 +1,5 @@
 # Surge 直连规则
-# 生成时间: 2026-07-20 08:51:53 UTC
+# 生成时间: 2026-07-21 08:22:07 UTC
 DOMAIN-SUFFIX,a-b.cc,DIRECT
 DOMAIN-SUFFIX,a-du.net,DIRECT
 DOMAIN-SUFFIX,a-isv.org,DIRECT
