@@ -1,4 +1,4 @@
-# 自动生成于 2026-09-03 10:36:48 UTC
+# 自动生成于 2026-09-04 10:29:57 UTC
 # 上游来源: v2fly/domain-list-community + 自定义规则
 # 类型: 直连规则（中国域名直连）
 payload:
@@ -1814,6 +1814,7 @@ payload:
   - "+.aliddmall.com"
   - "+.alidns.com"
   - "+.alidns.net"
+  - "+.alidnsv122.com"
   - "+.alidnsv4.com"
   - "+.alidnsv5.com"
   - "+.aliedge.com"
@@ -3464,6 +3465,7 @@ payload:
   - "+.ata-test.net"
   - "+.atacchina.com"
   - "+.atanyu.com"
+  - "+.ataokeji.com"
   - "+.atatech.org"
   - "+.atats.shop"
   - "+.atb.so"
@@ -5519,6 +5521,7 @@ payload:
   - "+.beimeihongfeng.com"
   - "+.beimeizhijia.com"
   - "+.beimeizhiying.com"
+  - "+.beimokj.com"
   - "+.beinglab.com"
   - "+.beingmate.com"
   - "+.beipenggroup.com"
@@ -7395,6 +7398,7 @@ payload:
   - "+.bmrtech.com"
   - "+.bmrtjt.com"
   - "+.bms16.com"
+  - "+.bms28.xyz"
   - "+.bmser.com"
   - "+.bmshow.com"
   - "+.bmtrip.com"
@@ -8360,6 +8364,7 @@ payload:
   - "+.byf.com"
   - "+.byfen.com"
   - "+.byfen.net"
+  - "+.byfscl.xyz"
   - "+.byfunds.com"
   - "+.bygamesdk.com"
   - "+.bygpu.com"
@@ -16886,6 +16891,7 @@ payload:
   - "+.cumtenn.com"
   - "+.cumulon.com"
   - "+.cunan.com"
+  - "+.cuncc.cc"
   - "+.cuncunle.com"
   - "+.cunfang.com"
   - "+.cunhao.net"
@@ -19597,6 +19603,7 @@ payload:
   - "+.displink.com"
   - "+.distantmeaning.com"
   - "+.distinctclinic.com"
+  - "+.distinctech.com"
   - "+.ditai.fun"
   - "+.ditan.com"
   - "+.ditan360.com"
@@ -41620,6 +41627,7 @@ payload:
   - "+.intmes.com"
   - "+.intohard.com"
   - "+.intomod.com"
+  - "+.intonead.com"
   - "+.intopet.com"
   - "+.intostarry.com"
   - "+.intovfx.com"
@@ -48481,6 +48489,7 @@ payload:
   - "+.kkmar.com"
   - "+.kkmh.com"
   - "+.kkmicro.com"
+  - "+.kkmm.com"
   - "+.kkmop.com"
   - "+.kkong.vip"
   - "+.kkrb.net"
@@ -49993,13 +50002,4 @@ payload:
   - "+.lanzouw.com"
   - "+.lanzoux.com"
   - "+.lanzouy.com"
-  - "+.lanzov.com"
-  - "+.lanzun.net"
-  - "+.lao.si"
-  - "+.laobaicai.net"
-  - "+.laobaigan-hs.com"
-  - "+.laoban100.com"
-  - "+.laobanfa.com"
-  - "+.laobangban.com"
-  - "+.laobanmail.com"
-# 共 101968 条规则（仅导出前50000条）
+# 共 101988 条规则（仅导出前50000条）
