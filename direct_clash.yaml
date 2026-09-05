@@ -1,4 +1,4 @@
-# 自动生成于 2026-09-04 10:29:57 UTC
+# 自动生成于 2026-09-05 09:54:18 UTC
 # 上游来源: v2fly/domain-list-community + 自定义规则
 # 类型: 直连规则（中国域名直连）
 payload:
@@ -7174,6 +7174,7 @@ payload:
   - "+.bktsj.com"
   - "+.bkvps.com"
   - "+.bkweek.com"
+  - "+.bkwsq.com"
   - "+.bkzhibo.com"
   - "+.bkzzy.com"
   - "+.bl.com"
@@ -9083,6 +9084,7 @@ payload:
   - "+.cangzhouhd.com"
   - "+.canhighcenter.com"
   - "+.canhot.net"
+  - "+.canhui.xyz"
   - "+.caniculab.com"
   - "+.canidc.com"
   - "+.canjio.com"
@@ -13361,7 +13363,6 @@ payload:
   - "+.ck921.com"
   - "+.ckair.com"
   - "+.ckan.tv"
-  - "+.ckbv165.org"
   - "+.ckd-mbd.com"
   - "+.ckd.im"
   - "+.ckd.so"
@@ -24270,7 +24271,6 @@ payload:
   - "+.fapiao.com"
   - "+.fapiao365.com"
   - "+.fapiaobang.com"
-  - "+.faq-whtasapp.com"
   - "+.faqianjia.com"
   - "+.faqiren.com"
   - "+.far-china.com"
@@ -29582,7 +29582,6 @@ payload:
   - "+.gredmedic.com"
   - "+.gree-jd.com"
   - "+.gree.com"
-  - "+.greebox.com"
   - "+.greedc.com"
   - "+.greedongaohotel.com"
   - "+.greefinance.com"
@@ -49694,7 +49693,6 @@ payload:
   - "+.laijuba.com"
   - "+.laikan.com"
   - "+.laikanxia.com"
-  - "+.laikanxing.com"
   - "+.laikanxs.com"
   - "+.laike.net"
   - "+.laiketui.com"
@@ -50002,4 +50000,6 @@ payload:
   - "+.lanzouw.com"
   - "+.lanzoux.com"
   - "+.lanzouy.com"
-# 共 101988 条规则（仅导出前50000条）
+  - "+.lanzov.com"
+  - "+.lanzun.net"
+# 共 101986 条规则（仅导出前50000条）
