@@ -1,4 +1,4 @@
-# 自动生成于 2026-09-05 09:54:18 UTC
+# 自动生成于 2026-09-06 10:11:39 UTC
 # 上游来源: v2fly/domain-list-community + 自定义规则
 # 类型: 直连规则（中国域名直连）
 payload:
@@ -23117,6 +23117,7 @@ payload:
   - "+.eqxiuzhan.com"
   - "+.eqyn.com"
   - "+.er07.com"
+  - "+.er3w.com"
   - "+.eraclean.com"
   - "+.eraedu.com"
   - "+.eral.com"
@@ -29125,6 +29126,7 @@ payload:
   - "+.gomegj.com"
   - "+.gomeholdings.com"
   - "+.gomehome.com"
+  - "+.gomeishop.com"
   - "+.gomeplus.com"
   - "+.gomo.com"
   - "+.gomocdn.com"
@@ -29944,6 +29946,7 @@ payload:
   - "+.gu166.com"
   - "+.gu360.com"
   - "+.gua123.com"
+  - "+.gua9.com"
   - "+.guabu.com"
   - "+.guaguay.com"
   - "+.guahao-inc.com"
@@ -39198,6 +39201,7 @@ payload:
   - "+.hyhro.com"
   - "+.hyhscm.com"
   - "+.hyht.fun"
+  - "+.hyhudong.com"
   - "+.hyhuo.com"
   - "+.hyhxt.net"
   - "+.hyhy.cc"
@@ -41141,6 +41145,7 @@ payload:
   - "+.img16888.com"
   - "+.img4399.com"
   - "+.img898.com"
+  - "+.img9g2026.com"
   - "+.imgbed.link"
   - "+.imgcdc.com"
   - "+.imgchr.com"
@@ -48899,6 +48904,7 @@ payload:
   - "+.kscloudapi.com"
   - "+.ksco.cc"
   - "+.ksdedu.com"
+  - "+.ksdyob.store"
   - "+.ksecit.com"
   - "+.ksedt.com"
   - "+.kseibitools.com"
@@ -49996,10 +50002,4 @@ payload:
   - "+.lanzous.com"
   - "+.lanzout.com"
   - "+.lanzouu.com"
-  - "+.lanzouv.com"
-  - "+.lanzouw.com"
-  - "+.lanzoux.com"
-  - "+.lanzouy.com"
-  - "+.lanzov.com"
-  - "+.lanzun.net"
-# 共 101986 条规则（仅导出前50000条）
+# 共 102002 条规则（仅导出前50000条）
