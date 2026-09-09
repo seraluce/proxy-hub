@@ -1,5 +1,5 @@
 # V2Ray 直连规则
-# 生成时间: 2026-09-08 10:30:47 UTC
+# 生成时间: 2026-09-09 10:42:04 UTC
 # 格式: domain:'.domain.com' (匹配所有子域名)
 domain:'.a-b.cc'
 domain:'.a-du.net'
