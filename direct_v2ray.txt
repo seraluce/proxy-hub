@@ -1,5 +1,5 @@
 # V2Ray 直连规则
-# 生成时间: 2026-09-20 10:33:04 UTC
+# 生成时间: 2026-09-21 11:53:00 UTC
 # 格式: domain:'.domain.com' (匹配所有子域名)
 domain:'.a-b.cc'
 domain:'.a-du.net'
@@ -25589,6 +25589,7 @@ domain:'.fnnspa.com'
 domain:'.fnos.net'
 domain:'.fnrcw.com'
 domain:'.fnrczp.com'
+domain:'.fnrrc.com'
 domain:'.fnsbqvz.com'
 domain:'.fnscore.com'
 domain:'.fnwlzz.com'
@@ -29168,6 +29169,7 @@ domain:'.gongkongsaas.com'
 domain:'.gonglchuangl.net'
 domain:'.gonglf.com'
 domain:'.gonglve.net'
+domain:'.gongniukaiguan.net'
 domain:'.gongnou.com'
 domain:'.gongpin.net'
 domain:'.gongpingjia.com'
@@ -49999,5 +50001,3 @@ domain:'.lanzouo.com'
 domain:'.lanzoup.com'
 domain:'.lanzouq.com'
 domain:'.lanzous.com'
-domain:'.lanzout.com'
-domain:'.lanzouu.com'

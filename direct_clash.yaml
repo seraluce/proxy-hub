@@ -1,4 +1,4 @@
-# 自动生成于 2026-09-20 10:33:03 UTC
+# 自动生成于 2026-09-21 11:53:00 UTC
 # 上游来源: v2fly/domain-list-community + 自定义规则
 # 类型: 直连规则（中国域名直连）
 payload:
@@ -25590,6 +25590,7 @@ payload:
   - "+.fnos.net"
   - "+.fnrcw.com"
   - "+.fnrczp.com"
+  - "+.fnrrc.com"
   - "+.fnsbqvz.com"
   - "+.fnscore.com"
   - "+.fnwlzz.com"
@@ -29169,6 +29170,7 @@ payload:
   - "+.gonglchuangl.net"
   - "+.gonglf.com"
   - "+.gonglve.net"
+  - "+.gongniukaiguan.net"
   - "+.gongnou.com"
   - "+.gongpin.net"
   - "+.gongpingjia.com"
@@ -50000,6 +50002,4 @@ payload:
   - "+.lanzoup.com"
   - "+.lanzouq.com"
   - "+.lanzous.com"
-  - "+.lanzout.com"
-  - "+.lanzouu.com"
-# 共 102003 条规则（仅导出前50000条）
+# 共 102012 条规则（仅导出前50000条）
