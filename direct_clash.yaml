@@ -1,4 +1,4 @@
-# 自动生成于 2026-10-10 11:50:07 UTC
+# 自动生成于 2026-10-11 12:01:51 UTC
 # 上游来源: v2fly/domain-list-community + 自定义规则
 # 类型: 直连规则（中国域名直连）
 payload:
@@ -1080,6 +1080,7 @@ payload:
   - "+.aibeike.com"
   - "+.aibiaomei.com"
   - "+.aibiaow.com"
+  - "+.aibilun.com"
   - "+.aibing.cc"
   - "+.aibll.com"
   - "+.aibo123.com"
@@ -2071,6 +2072,7 @@ payload:
   - "+.aliyunwaf4.com"
   - "+.aliyunwaf5.com"
   - "+.aliyunx.com"
+  - "+.alizch.com"
   - "+.alizhaopin.com"
   - "+.alizhizhu.com"
   - "+.alizila.com"
@@ -10577,6 +10579,7 @@ payload:
   - "+.cfd-china.com"
   - "+.cfd163.com"
   - "+.cfdns43.com"
+  - "+.cfdns46.com"
   - "+.cfdns5.com"
   - "+.cfdns81.com"
   - "+.cfdp.org"
@@ -15012,6 +15015,7 @@ payload:
   - "+.codeaha.com"
   - "+.codebaoku.com"
   - "+.codebe.org"
+  - "+.codebuddy.ai"
   - "+.codebuddy.info"
   - "+.codebuddy.net"
   - "+.codebuddy.pro"
@@ -20155,6 +20159,7 @@ payload:
   - "+.dnsjiasu001.com"
   - "+.dnsjp.cc"
   - "+.dnsjxla.com"
+  - "+.dnski.com"
   - "+.dnslin.com"
   - "+.dnsmeasurement.com"
   - "+.dnsmsn.com"
@@ -49997,9 +50002,4 @@ payload:
   - "+.laiye.com"
   - "+.laiyifen.com"
   - "+.laiyincat.com"
-  - "+.laiyouhui.net"
-  - "+.laiyouxi.com"
-  - "+.laiytech.com"
-  - "+.laiyu.com"
-  - "+.laizee.com"
-# 共 102537 条规则（仅导出前50000条）
+# 共 102545 条规则（仅导出前50000条）
