@@ -1,4 +1,4 @@
-# 自动生成于 2026-10-24 10:12:43 UTC
+# 自动生成于 2026-10-25 10:37:51 UTC
 # 上游来源: v2fly/domain-list-community + 自定义规则
 # 类型: 直连规则（中国域名直连）
 payload:
@@ -2921,6 +2921,7 @@ payload:
   - "+.app-site-association.cdn-apple.com"
   - "+.app-static.com"
   - "+.app-store.dji.com"
+  - "+.app.moegirl.org.cn"
   - "+.app111.com"
   - "+.app111.org"
   - "+.app16688.com"
@@ -10061,6 +10062,7 @@ payload:
   - "+.cdqz.net"
   - "+.cdrbs.net"
   - "+.cdrcb.com"
+  - "+.cdrcbank.com"
   - "+.cdren.net"
   - "+.cdrich.com"
   - "+.cdrjob.com"
@@ -15982,6 +15984,7 @@ payload:
   - "+.cqyygz.com"
   - "+.cqyyjc.com"
   - "+.cqyysx.com"
+  - "+.cqyyxc.com"
   - "+.cqyyzy.com"
   - "+.cqyznews.com"
   - "+.cqzbcg.com"
@@ -39686,6 +39689,7 @@ payload:
   - "+.ibaizhu.com"
   - "+.ibanana.club"
   - "+.ibanbu.com"
+  - "+.ibangbank.com"
   - "+.ibanggo.com"
   - "+.ibangkf.com"
   - "+.ibangtiao.com"
@@ -41798,6 +41802,7 @@ payload:
   - "+.isi-gf.com"
   - "+.isiabio.com"
   - "+.isign.ren"
+  - "+.isigning.com"
   - "+.isigu.com"
   - "+.isilent.me"
   - "+.isilicontech.com"
@@ -49997,9 +50002,4 @@ payload:
   - "+.lckkc.com"
   - "+.lcloudcdn.com"
   - "+.lcmhbl.com"
-  - "+.lcnichia.com"
-  - "+.lcofjp.com"
-  - "+.lcofo.com"
-  - "+.lcouncil.com"
-  - "+.lcp.lenovo.com"
-# 共 101411 条规则（仅导出前50000条）
+# 共 101417 条规则（仅导出前50000条）
