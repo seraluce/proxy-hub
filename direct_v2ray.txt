@@ -1,5 +1,5 @@
 # V2Ray 直连规则
-# 生成时间: 2026-10-26 12:10:48 UTC
+# 生成时间: 2026-10-27 11:32:04 UTC
 # 格式: domain:'.domain.com' (匹配所有子域名)
 domain:'.a-b.cc'
 domain:'.a-du.net'
@@ -24848,6 +24848,7 @@ domain:'.filfox.info'
 domain:'.fillersmart.com'
 domain:'.fillseo.com'
 domain:'.film-yuelongchina.com'
+domain:'.filmorigin.com'
 domain:'.fily.fun'
 domain:'.fim34s.com'
 domain:'.fimmu.com'
@@ -47195,6 +47196,7 @@ domain:'.kakamobi.com'
 domain:'.kakappt.com'
 domain:'.kakashuzi.net'
 domain:'.kakatx.com'
+domain:'.kakaxing.com'
 domain:'.kakayuy.net'
 domain:'.kaken-china.com'
 domain:'.kaku-scdn.com'
@@ -49999,5 +50001,3 @@ domain:'.lckeshun.com'
 domain:'.lckfb.com'
 domain:'.lckiss.com'
 domain:'.lckkc.com'
-domain:'.lcloudcdn.com'
-domain:'.lcmhbl.com'
