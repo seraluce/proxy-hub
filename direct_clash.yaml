@@ -1,4 +1,4 @@
-# 自动生成于 2026-10-29 12:12:51 UTC
+# 自动生成于 2026-10-30 12:03:11 UTC
 # 上游来源: v2fly/domain-list-community + 自定义规则
 # 类型: 直连规则（中国域名直连）
 payload:
@@ -9128,6 +9128,7 @@ payload:
   - "+.capwhale.com"
   - "+.caqzlsgs.com"
   - "+.car-metaverse.com"
+  - "+.car-vacation.com"
   - "+.car0575.com"
   - "+.car2sharechina.com"
   - "+.car369.com"
@@ -38877,6 +38878,7 @@ payload:
   - "+.hxlhjt.com"
   - "+.hxljjt.com"
   - "+.hxlot.com"
+  - "+.hxlove22s.cc"
   - "+.hxlsw.com"
   - "+.hxltcj.com"
   - "+.hxlxx.com"
@@ -48891,6 +48893,7 @@ payload:
   - "+.ktwap.net"
   - "+.ktxuexi.com"
   - "+.ktyunlianjie.com"
+  - "+.ktzgame.com"
   - "+.ku25.com"
   - "+.ku33a.net"
   - "+.ku6.com"
@@ -49999,7 +50002,4 @@ payload:
   - "+.lawbridge.org"
   - "+.lawbus.net"
   - "+.lawen.org"
-  - "+.lawen2.org"
-  - "+.lawinfochina.com"
-  - "+.lawipcompass.com"
-# 共 101728 条规则（仅导出前50000条）
+# 共 101731 条规则（仅导出前50000条）
