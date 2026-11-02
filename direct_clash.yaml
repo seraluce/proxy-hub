@@ -1,4 +1,4 @@
-# 自动生成于 2026-11-01 12:36:55 UTC
+# 自动生成于 2026-11-02 14:40:03 UTC
 # 上游来源: v2fly/domain-list-community + 自定义规则
 # 类型: 直连规则（中国域名直连）
 payload:
@@ -8146,6 +8146,7 @@ payload:
   - "+.bustoprint.com"
   - "+.bustruckexpo.com"
   - "+.busuanzi.cc"
+  - "+.busyming.com"
   - "+.busytrade.com"
   - "+.but7.com"
   - "+.butair.com"
@@ -20310,6 +20311,7 @@ payload:
   - "+.doubanio.com"
   - "+.doubao-dev.com"
   - "+.doubao.com"
+  - "+.doubaoapps.com"
   - "+.doubaocdn.com"
   - "+.doubaozhidao.com"
   - "+.doubean.com"
@@ -50000,6 +50002,4 @@ payload:
   - "+.lcenn.com"
   - "+.lcfby.com"
   - "+.lcfcw.com"
-  - "+.lcfgjs.com"
-  - "+.lcfile.com"
-# 共 101503 条规则（仅导出前50000条）
+# 共 101506 条规则（仅导出前50000条）

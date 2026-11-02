@@ -1,5 +1,5 @@
 # V2Ray 直连规则
-# 生成时间: 2026-11-01 12:36:55 UTC
+# 生成时间: 2026-11-02 14:40:03 UTC
 # 格式: domain:'.domain.com' (匹配所有子域名)
 domain:'.a-b.cc'
 domain:'.a-du.net'
@@ -8145,6 +8145,7 @@ domain:'.busnc.com'
 domain:'.bustoprint.com'
 domain:'.bustruckexpo.com'
 domain:'.busuanzi.cc'
+domain:'.busyming.com'
 domain:'.busytrade.com'
 domain:'.but7.com'
 domain:'.butair.com'
@@ -20309,6 +20310,7 @@ domain:'.doubaninfo.com'
 domain:'.doubanio.com'
 domain:'.doubao-dev.com'
 domain:'.doubao.com'
+domain:'.doubaoapps.com'
 domain:'.doubaocdn.com'
 domain:'.doubaozhidao.com'
 domain:'.doubean.com'
@@ -49999,5 +50001,3 @@ domain:'.lcdzsww.com'
 domain:'.lcenn.com'
 domain:'.lcfby.com'
 domain:'.lcfcw.com'
-domain:'.lcfgjs.com'
-domain:'.lcfile.com'
