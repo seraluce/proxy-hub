@@ -1,5 +1,5 @@
 # V2Ray 直连规则
-# 生成时间: 2026-11-15 13:22:56 UTC
+# 生成时间: 2026-11-16 14:38:33 UTC
 # 格式: domain:'.domain.com' (匹配所有子域名)
 domain:'.a-b.cc'
 domain:'.a-du.net'
@@ -9085,6 +9085,7 @@ domain:'.caps-china.org'
 domain:'.capsuleshanghai.com'
 domain:'.captain-cro.com'
 domain:'.captainbi.com'
+domain:'.captive.apple.com'
 domain:'.capturetheflag.fun'
 domain:'.capvision.com'
 domain:'.capwhale.com'
@@ -15054,6 +15055,7 @@ domain:'.conergas.net'
 domain:'.conew.com'
 domain:'.configuration.apple.com'
 domain:'.configuration.apple.com.akadns.net'
+domain:'.configuration.ls.apple.com'
 domain:'.confluxrpc.com'
 domain:'.conghua.com'
 domain:'.congmiqq.com'
@@ -49999,5 +50001,3 @@ domain:'.lc-rc.com'
 domain:'.lc044.love'
 domain:'.lc123.net'
 domain:'.lc787.com'
-domain:'.lcang.com'
-domain:'.lcatgame.com'

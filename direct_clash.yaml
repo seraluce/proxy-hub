@@ -1,4 +1,4 @@
-# 自动生成于 2026-11-15 13:22:56 UTC
+# 自动生成于 2026-11-16 14:38:33 UTC
 # 上游来源: v2fly/domain-list-community + 自定义规则
 # 类型: 直连规则（中国域名直连）
 payload:
@@ -9086,6 +9086,7 @@ payload:
   - "+.capsuleshanghai.com"
   - "+.captain-cro.com"
   - "+.captainbi.com"
+  - "+.captive.apple.com"
   - "+.capturetheflag.fun"
   - "+.capvision.com"
   - "+.capwhale.com"
@@ -15055,6 +15056,7 @@ payload:
   - "+.conew.com"
   - "+.configuration.apple.com"
   - "+.configuration.apple.com.akadns.net"
+  - "+.configuration.ls.apple.com"
   - "+.confluxrpc.com"
   - "+.conghua.com"
   - "+.congmiqq.com"
@@ -50000,6 +50002,4 @@ payload:
   - "+.lc044.love"
   - "+.lc123.net"
   - "+.lc787.com"
-  - "+.lcang.com"
-  - "+.lcatgame.com"
-# 共 101573 条规则（仅导出前50000条）
+# 共 101577 条规则（仅导出前50000条）
