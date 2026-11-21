@@ -1,5 +1,5 @@
 # V2Ray 直连规则
-# 生成时间: 2026-11-20 14:50:09 UTC
+# 生成时间: 2026-11-21 14:07:36 UTC
 # 格式: domain:'.domain.com' (匹配所有子域名)
 domain:'.a-b.cc'
 domain:'.a-du.net'
@@ -21906,6 +21906,7 @@ domain:'.echippqc.com'
 domain:'.echo-isoftstone.com'
 domain:'.echo188.com'
 domain:'.echoing.tech'
+domain:'.echooai.com'
 domain:'.echoteen.com'
 domain:'.echovelle.com'
 domain:'.echu-cable.com'
@@ -24167,6 +24168,7 @@ domain:'.fayiyi.com'
 domain:'.fayufaguo.com'
 domain:'.fazhi12368.com'
 domain:'.fazhijx.com'
+domain:'.fazhipro.com'
 domain:'.fazz.fun'
 domain:'.fb32dc52302e6b9b.com'
 domain:'.fb46cd5483f029aa.com'
@@ -49999,5 +50001,3 @@ domain:'.lc-led.net'
 domain:'.lc-news.com'
 domain:'.lc-rc.com'
 domain:'.lc044.love'
-domain:'.lc123.net'
-domain:'.lc787.com'
